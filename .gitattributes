@@ -1,0 +1,8 @@
+# Скрипти й Makefile мають потрапляти на Linux із LF: інакше shebang читається
+# як "#!/bin/bash\r" і запуск падає з "bad interpreter".
+*.sh      text eol=lf
+Makefile  text eol=lf
+*.java    text eol=lf
+*.md      text eol=lf
+input     text eol=lf
+*.jar     binary
