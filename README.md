@@ -48,12 +48,17 @@ Makefile                 збірка та запуск
 ### Формат `out/input`
 
 ```
-4611685975477714963
-1 2 4 8
+number=4611685975477714963
+workers=1 2 4 8
+repeats=3
 ```
 
-Перший рядок — число для факторизації. Другий — кількості воркерів, які треба
-перевірити; програма проганяє кожну з них і додає рядок до підсумкової таблиці.
+`number` — число для факторизації, `workers` — кількості воркерів, які треба перевірити,
+`repeats` — скільки разів міряти кожну конфігурацію. Повтори потрібні, бо в хмарі
+одиничне вимірювання ненадійне: впливають сусідні віртуальні машини та розігрів
+JIT-компілятора. За основну характеристику береться найкращий час, середній наводиться поряд.
+
+Крім таблиці у консоль, програма пише `out/results.csv` — із нього будується графік.
 
 ## Розгортання в Google Cloud
 
@@ -93,7 +98,7 @@ bash app.sh 10.166.0.2 https://github.com/КОРИСТУВАЧ/РЕПОЗИТО�
 
 ```
 sudo apt-get update
-sudo apt-get install -y openjdk-8-jdk
+sudo apt-get install -y openjdk-17-jdk-headless
 wget https://github.com/lionell/labs/raw/master/parcs/Daemon/Daemon.jar
 java -jar Daemon.jar &
 ```
@@ -103,7 +108,7 @@ java -jar Daemon.jar &
 ### 3. Hosts-server
 
 ```
-sudo apt-get update && sudo apt-get install -y openjdk-8-jdk
+sudo apt-get update && sudo apt-get install -y openjdk-17-jdk-headless
 wget https://github.com/lionell/labs/raw/master/parcs/HostsServer/TCPHostsServer.jar
 
 touch hosts.list
@@ -118,7 +123,7 @@ java -jar TCPHostsServer.jar &
 ### 4. Застосунок (на `app`)
 
 ```
-sudo apt-get update && sudo apt-get install -y openjdk-8-jdk git make
+sudo apt-get update && sudo apt-get install -y openjdk-17-jdk-headless git make
 git clone ПОСИЛАННЯ_НА_ЦЕЙ_РЕПОЗИТОРІЙ
 cd ЛР1_PARCS
 
@@ -152,8 +157,20 @@ make
 У `Makefile` це враховано; при ручній компіляції потрібен прапорець
 `-cp out/parcs.jar`.
 
-**Потрібна саме Java 8.** `parcs.jar` зібрано під неї; на новіших JDK можливі
-попередження. В інструкції курсу теж вказано `openjdk-8-jdk`.
+**Інструкція курсу вказує `openjdk-8-jdk`, але встановити його не вийде.**
+У репозиторіях сучасного Debian (12 Bookworm, типовий образ GCP) цього пакета вже немає —
+лишився `openjdk-17-jdk-headless`. Перевірено, що все працює на Java 17:
+`parcs.jar` зібрано під Java 5 (версія класів 49), а JVM 17 виконує такий байт-код без змін.
+Усередині бібліотеки немає жодного звертання до `sun.*` чи `com.sun.*`, лише
+`java.io`, `java.net` і `java.util` — тому нічого з прибраного за ці роки вона не чіпає.
+
+**Вкладені класи мають потрапити в jar.** Клас `Factorize.Settings` компілюється в
+окремий файл `Factorize.class`. Якщо перелічувати файли для `jar` поіменно,
+про нього легко забути, і застосунок падає з `NoClassDefFoundError` уже під час запуску.
+У `Makefile` компіляція йде в окрему теку, а `jar` пакує її цілком.
+
+**`javac` потребує `-encoding UTF-8`.** У коді є кирилиця, а типове кодування
+компілятора залежить від локалі системи.
 
 **Кирилиця у виводі.** Якщо консоль показує запитання замість літер, запускати з
 `-Dfile.encoding=UTF-8`. На Linux-машинах GCP із локаллю UTF-8 це не потрібно.
