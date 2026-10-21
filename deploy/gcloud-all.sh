@@ -148,20 +148,46 @@ internal_ip() {
   gcloud compute instances describe "$1" --format='get(networkInterfaces[0].networkIP)'
 }
 
-run_on() {
+ssh_raw() {
   local host="$1"; shift
   gcloud compute ssh "$host" --zone="$ZONE" --quiet --command "$*"
 }
 
+# Свіжостворена машина кілька десятків секунд не приймає ssh: спершу вона
+# завантажується, потім чекає, доки з метаданих приїде публічний ключ.
+# Доти ssh виходить із кодом 255. Помилка тимчасова, тому кожна команда
+# повторюється кілька разів, перш ніж вважатися невдалою.
+run_on() {
+  local host="$1"; shift
+  local attempt
+  for attempt in 1 2 3 4 5; do
+    if ssh_raw "$host" "$@"; then
+      return 0
+    fi
+    echo "  спроба $attempt для $host не вдалася, повтор через 15 с"
+    sleep 15
+  done
+  echo "Не вдалося виконати команду на $host після 5 спроб."
+  return 1
+}
+
 say "Чекаємо, доки машини приймуть SSH"
 for host in hosts-server app $DAEMON_NAMES; do
-  for attempt in $(seq 1 30); do
-    if run_on "$host" "true" >/dev/null 2>&1; then
+  ready=no
+  for attempt in $(seq 1 40); do
+    if ssh_raw "$host" "true" >/dev/null 2>&1; then
       echo "$host готовий"
+      ready=yes
       break
     fi
     sleep 5
   done
+  if [ "$ready" = "no" ]; then
+    echo "$host так і не прийняв ssh за 200 секунд."
+    echo "Перевір стан машини:  gcloud compute instances list"
+    echo "Скрипт можна просто запустити ще раз — створене він не чіпатиме."
+    exit 1
+  fi
 done
 
 say "Демони"
