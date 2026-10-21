@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="580" font-family="Georgia, serif">
+<rect width="980" height="580" fill="#ffffff"/>
+<text x="100" y="32" font-size="19" font-weight="bold">Час виконання залежно від кількості воркерів</text>
+<text x="100" y="52" font-size="13.5" fill="#555">N = 4 611 685 975 477 714 963, найкращий із трьох замірів</text>
+<line x1="100" y1="510.0" x2="936" y2="510.0" stroke="#eaeaea"/>
+<text x="90.0" y="514.0" font-size="13" text-anchor="end" fill="#555">0</text>
+<line x1="100" y1="435.3" x2="936" y2="435.3" stroke="#eaeaea"/>
+<text x="90.0" y="439.3" font-size="13" text-anchor="end" fill="#555">5</text>
+<line x1="100" y1="360.7" x2="936" y2="360.7" stroke="#eaeaea"/>
+<text x="90.0" y="364.7" font-size="13" text-anchor="end" fill="#555">10</text>
+<line x1="100" y1="286.0" x2="936" y2="286.0" stroke="#eaeaea"/>
+<text x="90.0" y="290.0" font-size="13" text-anchor="end" fill="#555">14</text>
+<line x1="100" y1="211.3" x2="936" y2="211.3" stroke="#eaeaea"/>
+<text x="90.0" y="215.3" font-size="13" text-anchor="end" fill="#555">19</text>
+<line x1="100" y1="136.7" x2="936" y2="136.7" stroke="#eaeaea"/>
+<text x="90.0" y="140.7" font-size="13" text-anchor="end" fill="#555">24</text>
+<line x1="100" y1="62.0" x2="936" y2="62.0" stroke="#eaeaea"/>
+<text x="90.0" y="66.0" font-size="13" text-anchor="end" fill="#555">29</text>
+<line x1="199.5" y1="62" x2="199.5" y2="510" stroke="#eaeaea"/>
+<text x="199.5" y="532" font-size="13" text-anchor="middle" fill="#555">1</text>
+<line x1="299.0" y1="62" x2="299.0" y2="510" stroke="#eaeaea"/>
+<text x="299.0" y="532" font-size="13" text-anchor="middle" fill="#555">2</text>
+<line x1="498.1" y1="62" x2="498.1" y2="510" stroke="#eaeaea"/>
+<text x="498.1" y="532" font-size="13" text-anchor="middle" fill="#555">4</text>
+<line x1="896.2" y1="62" x2="896.2" y2="510" stroke="#eaeaea"/>
+<text x="896.2" y="532" font-size="13" text-anchor="middle" fill="#555">8</text>
+<line x1="100" y1="510" x2="936" y2="510" stroke="#222" stroke-width="1.6"/>
+<line x1="100" y1="62" x2="100" y2="510" stroke="#222" stroke-width="1.6"/>
+<text x="518" y="564" font-size="14" text-anchor="middle">кількість воркерів</text>
+<text x="26" y="286" font-size="14" text-anchor="middle" transform="rotate(-90 26 286)">час виконання, с</text>
+<line x1="100" y1="130.3" x2="936" y2="130.3" stroke="#c62828" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="930" y="120.3" font-size="13" text-anchor="end" fill="#c62828">послідовний алгоритм — 24.21 с</text>
+<path d="M 199.5,147.3 L 299.0,325.4 L 498.1,415.8 L 896.2,434.3" fill="none" stroke="#1565c0" stroke-width="2.8"/>
+<circle cx="199.5" cy="147.3" r="5" fill="#1565c0"/>
+<text x="199.5" y="173.3" font-size="13" text-anchor="middle" fill="#1565c0">23.13 с</text>
+<circle cx="299.0" cy="325.4" r="5" fill="#1565c0"/>
+<text x="299.0" y="311.4" font-size="13" text-anchor="middle" fill="#1565c0">11.77 с</text>
+<circle cx="498.1" cy="415.8" r="5" fill="#1565c0"/>
+<text x="498.1" y="401.8" font-size="13" text-anchor="middle" fill="#1565c0">6.01 с</text>
+<circle cx="896.2" cy="434.3" r="5" fill="#1565c0"/>
+<text x="896.2" y="420.3" font-size="13" text-anchor="middle" fill="#1565c0">4.83 с</text>
+<line x1="130" y1="82" x2="158" y2="82" stroke="#1565c0" stroke-width="3"/>
+<text x="166" y="86" font-size="13" fill="#333">паралельний алгоритм у ПАРКС</text>
+<line x1="130" y1="104" x2="158" y2="104" stroke="#c62828" stroke-width="3" stroke-dasharray="8 6"/>
+<text x="166" y="108" font-size="13" fill="#333">послідовний алгоритм (еталон)</text>
+</svg>
