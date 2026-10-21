@@ -197,13 +197,16 @@ for i in $(seq 1 "$DAEMONS"); do
   ip=$(internal_ip "$host")
   DAEMON_IPS="$DAEMON_IPS $ip"
   echo "--- $host ($ip)"
-  # pkill — щоб повторний запуск не підняв другий демон на тому самому порту 2222
+  # Попередній демон глушиться за pid-файлом, а не через pkill -f.
+  # pkill -f дивиться на весь командний рядок процесу, а ssh виконує весь блок
+  # нижче як один рядок — у якому слово Daemon.jar стоїть ще й в аргументі wget.
+  # Тому pkill знаходив там сам себе, убивав власну оболонку, і ssh падав із 255.
   run_on "$host" "
     sudo apt-get update -qq &&
     sudo apt-get install -y -qq $JDK_PACKAGE wget &&
     wget -q -O Daemon.jar https://github.com/lionell/labs/raw/master/parcs/Daemon/Daemon.jar &&
-    pkill -f '[D]aemon.jar' || true &&
-    (nohup java -jar Daemon.jar > daemon.log 2>&1 &) &&
+    { [ -f daemon.pid ] && kill \$(cat daemon.pid) 2>/dev/null; true; } &&
+    (nohup java -jar Daemon.jar > daemon.log 2>&1 & echo \$! > daemon.pid) &&
     sleep 2 && cat daemon.log
   "
 done
@@ -220,8 +223,8 @@ run_on hosts-server "
   wget -q -O TCPHostsServer.jar https://github.com/lionell/labs/raw/master/parcs/HostsServer/TCPHostsServer.jar &&
   printf '%s\n' $DAEMON_IPS > hosts.list &&
   cat hosts.list &&
-  pkill -f '[T]CPHostsServer.jar' || true &&
-  (nohup java -jar TCPHostsServer.jar > hosts.log 2>&1 &) &&
+  { [ -f hosts.pid ] && kill \$(cat hosts.pid) 2>/dev/null; true; } &&
+  (nohup java -jar TCPHostsServer.jar > hosts.log 2>&1 & echo \$! > hosts.pid) &&
   sleep 2 && cat hosts.log
 "
 
