@@ -101,19 +101,42 @@ if [ "$WORKER_CORES" -lt 8 ]; then
   echo "Рядок для 8 воркерів покаже падіння ефективності через перепідписку ядер."
 fi
 
-say "Створення інстансів"
-gcloud compute instances create hosts-server app \
-  --machine-type="$COORD_MACHINE" \
-  --image-family="$IMAGE_FAMILY" \
-  --image-project="$IMAGE_PROJECT" \
-  --quiet
+# Скрипт можна запускати повторно. Сесія Cloud Shell вмирає разом із закритою
+# вкладкою браузера, і тоді скрипт обривається на середині, а створені інстанси
+# лишаються висіти й тарифікуватися. Тому створюються лише ті машини, яких ще немає.
 
-# shellcheck disable=SC2086
-gcloud compute instances create $DAEMON_NAMES \
-  --machine-type="$DAEMON_MACHINE" \
-  --image-family="$IMAGE_FAMILY" \
-  --image-project="$IMAGE_PROJECT" \
-  --quiet
+say "Створення інстансів"
+
+EXISTING=$(gcloud compute instances list --format='value(name)' 2>/dev/null || true)
+have() { echo "$EXISTING" | grep -qx "$1"; }
+
+missing_coord=""
+for host in hosts-server app; do
+  if have "$host"; then echo "$host уже існує — пропускаю"; else missing_coord="$missing_coord $host"; fi
+done
+
+missing_daemons=""
+for host in $DAEMON_NAMES; do
+  if have "$host"; then echo "$host уже існує — пропускаю"; else missing_daemons="$missing_daemons $host"; fi
+done
+
+if [ -n "$missing_coord" ]; then
+  # shellcheck disable=SC2086
+  gcloud compute instances create $missing_coord \
+    --machine-type="$COORD_MACHINE" \
+    --image-family="$IMAGE_FAMILY" \
+    --image-project="$IMAGE_PROJECT" \
+    --quiet
+fi
+
+if [ -n "$missing_daemons" ]; then
+  # shellcheck disable=SC2086
+  gcloud compute instances create $missing_daemons \
+    --machine-type="$DAEMON_MACHINE" \
+    --image-family="$IMAGE_FAMILY" \
+    --image-project="$IMAGE_PROJECT" \
+    --quiet
+fi
 
 say "Правило брандмауера"
 gcloud compute firewall-rules create allow-parcs \
@@ -148,10 +171,12 @@ for i in $(seq 1 "$DAEMONS"); do
   ip=$(internal_ip "$host")
   DAEMON_IPS="$DAEMON_IPS $ip"
   echo "--- $host ($ip)"
+  # pkill — щоб повторний запуск не підняв другий демон на тому самому порту 2222
   run_on "$host" "
     sudo apt-get update -qq &&
     sudo apt-get install -y -qq $JDK_PACKAGE wget &&
     wget -q -O Daemon.jar https://github.com/lionell/labs/raw/master/parcs/Daemon/Daemon.jar &&
+    pkill -f '[D]aemon.jar' || true &&
     (nohup java -jar Daemon.jar > daemon.log 2>&1 &) &&
     sleep 2 && cat daemon.log
   "
@@ -169,6 +194,7 @@ run_on hosts-server "
   wget -q -O TCPHostsServer.jar https://github.com/lionell/labs/raw/master/parcs/HostsServer/TCPHostsServer.jar &&
   printf '%s\n' $DAEMON_IPS > hosts.list &&
   cat hosts.list &&
+  pkill -f '[T]CPHostsServer.jar' || true &&
   (nohup java -jar TCPHostsServer.jar > hosts.log 2>&1 &) &&
   sleep 2 && cat hosts.log
 "
