@@ -14,9 +14,19 @@ ZONE="${ZONE:-europe-north1-a}"
 REGION="${REGION:-europe-north1}"
 DAEMONS="${DAEMONS:-4}"
 
-# Демони рахують — їм потрібні ядра. Hosts-server і app лише координують і майже
-# весь час простоюють, тому для них вистачає найменшої машини.
-DAEMON_MACHINE="${DAEMON_MACHINE:-e2-small}"
+# Типи машин підібрані під вимірювання, а не під економію.
+#
+# e2-micro, e2-small і e2-medium — машини зі спільним ядром (burstable): гарантовано
+# дають лише 0,25, 0,5 та 1 ядра відповідно, а понад це працюють на накопичених
+# кредитах. Для вимірювання часу вони не годяться: кредити за хвилину суцільного
+# рахунку вичерпуються, машину притискають до базової частки, і час стрибає в рази.
+#
+# Послідовний еталон виконується на app, тому саме там burstable-машина спотворює
+# геть усе: еталон виходить штучно повільним, і прискорення з ефективністю злітають
+# вище 100 %. Тому app і демони — на e2-standard-2 з виділеними ядрами.
+# Hosts-server лише роздає адреси й може лишатися найдешевшим.
+DAEMON_MACHINE="${DAEMON_MACHINE:-e2-standard-2}"
+APP_MACHINE="${APP_MACHINE:-e2-standard-2}"
 COORD_MACHINE="${COORD_MACHINE:-e2-micro}"
 
 REPO="${REPO:-https://github.com/yuliiayaresko/parcs-factorization.git}"
@@ -50,6 +60,7 @@ QUOTA_LINE=$(gcloud compute regions describe "$REGION" \
 
 DAEMON_CPUS=$(cpus_of "$DAEMON_MACHINE")
 COORD_CPUS=$(cpus_of "$COORD_MACHINE")
+APP_CPUS=$(cpus_of "$APP_MACHINE")
 
 if [ -n "$QUOTA_LINE" ]; then
   QUOTA_LIMIT=$(echo "$QUOTA_LINE" | awk '{print int($2)}')
@@ -57,7 +68,7 @@ if [ -n "$QUOTA_LINE" ]; then
   AVAILABLE=$((QUOTA_LIMIT - QUOTA_USED))
   echo "квота CPUS: $QUOTA_LIMIT, зайнято $QUOTA_USED, вільно $AVAILABLE"
 
-  BUDGET=$((AVAILABLE - 2 * COORD_CPUS))
+  BUDGET=$((AVAILABLE - COORD_CPUS - APP_CPUS))
   if [ "$BUDGET" -lt "$DAEMON_CPUS" ]; then
     echo
     echo "Вільної квоти не вистачає навіть на одного демона."
@@ -91,7 +102,8 @@ say "Налаштування"
 echo "зона:          $ZONE"
 echo "демонів:       $DAEMONS ($DAEMON_NAMES )"
 echo "машина демона: $DAEMON_MACHINE ($DAEMON_CPUS vCPU)"
-echo "машина коорд.: $COORD_MACHINE ($COORD_CPUS vCPU)"
+echo "машина app:    $APP_MACHINE ($APP_CPUS vCPU) — тут міряється послідовний еталон"
+echo "hosts-server:  $COORD_MACHINE ($COORD_CPUS vCPU)"
 echo "ядер під воркери: $WORKER_CORES"
 echo "образ:         $IMAGE_FAMILY"
 echo "репозиторій:   $REPO"
@@ -111,9 +123,10 @@ EXISTING=$(gcloud compute instances list --format='value(name)' 2>/dev/null || t
 have() { echo "$EXISTING" | grep -qx "$1"; }
 
 missing_coord=""
-for host in hosts-server app; do
-  if have "$host"; then echo "$host уже існує — пропускаю"; else missing_coord="$missing_coord $host"; fi
-done
+if have "hosts-server"; then echo "hosts-server уже існує — пропускаю"; else missing_coord="hosts-server"; fi
+
+missing_app=""
+if have "app"; then echo "app уже існує — пропускаю"; else missing_app="app"; fi
 
 missing_daemons=""
 for host in $DAEMON_NAMES; do
@@ -121,9 +134,16 @@ for host in $DAEMON_NAMES; do
 done
 
 if [ -n "$missing_coord" ]; then
-  # shellcheck disable=SC2086
   gcloud compute instances create $missing_coord \
     --machine-type="$COORD_MACHINE" \
+    --image-family="$IMAGE_FAMILY" \
+    --image-project="$IMAGE_PROJECT" \
+    --quiet
+fi
+
+if [ -n "$missing_app" ]; then
+  gcloud compute instances create $missing_app \
+    --machine-type="$APP_MACHINE" \
     --image-family="$IMAGE_FAMILY" \
     --image-project="$IMAGE_PROJECT" \
     --quiet
