@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="620" font-family="Georgia, serif">
+<rect width="980" height="620" fill="#ffffff"/>
+<defs>
+<marker id="a-1565c0" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#1565c0"/></marker>
+<marker id="a-c62828" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#c62828"/></marker>
+<marker id="a-2e7d32" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#2e7d32"/></marker>
+<marker id="a-616161" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#616161"/></marker>
+</defs>
+<text x="490" y="34" font-size="20" text-anchor="middle" fill="#1a1a1a" font-weight="bold">Розгортання ПАРКС у Google Cloud: шість віртуальних машин</text>
+<text x="490" y="58" font-size="14" text-anchor="middle" fill="#555">зона europe-north1-a, мережа default, обмін лише за внутрішніми адресами</text>
+<rect x="60" y="92" width="300" height="96" rx="7" fill="#e8f1fb" stroke="#1565c0" stroke-width="1.8"/>
+<text x="210" y="120" font-size="17" text-anchor="middle" fill="#1a1a1a" font-weight="bold">app</text>
+<text x="210" y="142" font-size="13.5" text-anchor="middle" fill="#1a1a1a">Factorize — кореневий модуль</text>
+<text x="210" y="162" font-size="12.5" text-anchor="middle" fill="#555">e2-standard-2, 2 виділені ядра</text>
+<text x="210" y="180" font-size="12.5" text-anchor="middle" fill="#555">тут міряється послідовний еталон</text>
+<rect x="620" y="92" width="300" height="96" rx="7" fill="#f3e8fb" stroke="#6a1b9a" stroke-width="1.8"/>
+<text x="770" y="120" font-size="17" text-anchor="middle" fill="#1a1a1a" font-weight="bold">hosts-server</text>
+<text x="770" y="142" font-size="13.5" text-anchor="middle" fill="#1a1a1a">TCPHostsServer, порт 3333</text>
+<text x="770" y="162" font-size="12.5" text-anchor="middle" fill="#555">e2-micro — лише роздає адреси</text>
+<text x="770" y="180" font-size="12.5" text-anchor="middle" fill="#555">hosts.list: 4 внутрішні IP демонів</text>
+<path d="M 360,126 L 612,126" stroke="#1565c0" stroke-width="2" fill="none" marker-end="url(#a-1565c0)"/>
+<text x="486" y="118" font-size="12.5" text-anchor="middle" fill="#1565c0">1. дай вільну машину</text>
+<path d="M 612,158 L 364,158" stroke="#6a1b9a" stroke-width="2" fill="none" marker-end="url(#a-6a1b9a)"/>
+<text x="486" y="176" font-size="12.5" text-anchor="middle" fill="#6a1b9a">2. адреса демона</text>
+<rect x="60" y="300" width="196" height="150" rx="7" fill="#eaf5ea" stroke="#2e7d32" stroke-width="1.8"/>
+<text x="158" y="326" font-size="15.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">daemon-1</text>
+<text x="158" y="346" font-size="12.5" text-anchor="middle" fill="#1a1a1a">Daemon, порт 2222</text>
+<text x="158" y="364" font-size="12" text-anchor="middle" fill="#555">e2-standard-2</text>
+<rect x="74" y="378" width="84" height="56" rx="5" fill="#ffffff" stroke="#2e7d32" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="116" y="398" font-size="12" text-anchor="middle" fill="#1a1a1a" font-weight="bold">point</text>
+<text x="116" y="414" font-size="10.5" text-anchor="middle" fill="#1a1a1a">TrialDivision</text>
+<text x="116" y="428" font-size="9.5" text-anchor="middle" fill="#666">окрема JVM</text>
+<rect x="166" y="378" width="84" height="56" rx="5" fill="#ffffff" stroke="#2e7d32" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="208" y="398" font-size="12" text-anchor="middle" fill="#1a1a1a" font-weight="bold">point</text>
+<text x="208" y="414" font-size="10.5" text-anchor="middle" fill="#1a1a1a">TrialDivision</text>
+<text x="208" y="428" font-size="9.5" text-anchor="middle" fill="#666">окрема JVM</text>
+<rect x="288" y="300" width="196" height="150" rx="7" fill="#eaf5ea" stroke="#2e7d32" stroke-width="1.8"/>
+<text x="386" y="326" font-size="15.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">daemon-2</text>
+<text x="386" y="346" font-size="12.5" text-anchor="middle" fill="#1a1a1a">Daemon, порт 2222</text>
+<text x="386" y="364" font-size="12" text-anchor="middle" fill="#555">e2-standard-2</text>
+<rect x="302" y="378" width="84" height="56" rx="5" fill="#ffffff" stroke="#2e7d32" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="344" y="398" font-size="12" text-anchor="middle" fill="#1a1a1a" font-weight="bold">point</text>
+<text x="344" y="414" font-size="10.5" text-anchor="middle" fill="#1a1a1a">TrialDivision</text>
+<text x="344" y="428" font-size="9.5" text-anchor="middle" fill="#666">окрема JVM</text>
+<rect x="394" y="378" width="84" height="56" rx="5" fill="#ffffff" stroke="#2e7d32" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="436" y="398" font-size="12" text-anchor="middle" fill="#1a1a1a" font-weight="bold">point</text>
+<text x="436" y="414" font-size="10.5" text-anchor="middle" fill="#1a1a1a">TrialDivision</text>
+<text x="436" y="428" font-size="9.5" text-anchor="middle" fill="#666">окрема JVM</text>
+<rect x="516" y="300" width="196" height="150" rx="7" fill="#eaf5ea" stroke="#2e7d32" stroke-width="1.8"/>
+<text x="614" y="326" font-size="15.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">daemon-3</text>
+<text x="614" y="346" font-size="12.5" text-anchor="middle" fill="#1a1a1a">Daemon, порт 2222</text>
+<text x="614" y="364" font-size="12" text-anchor="middle" fill="#555">e2-standard-2</text>
+<rect x="530" y="378" width="84" height="56" rx="5" fill="#ffffff" stroke="#2e7d32" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="572" y="398" font-size="12" text-anchor="middle" fill="#1a1a1a" font-weight="bold">point</text>
+<text x="572" y="414" font-size="10.5" text-anchor="middle" fill="#1a1a1a">TrialDivision</text>
+<text x="572" y="428" font-size="9.5" text-anchor="middle" fill="#666">окрема JVM</text>
+<rect x="622" y="378" width="84" height="56" rx="5" fill="#ffffff" stroke="#2e7d32" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="664" y="398" font-size="12" text-anchor="middle" fill="#1a1a1a" font-weight="bold">point</text>
+<text x="664" y="414" font-size="10.5" text-anchor="middle" fill="#1a1a1a">TrialDivision</text>
+<text x="664" y="428" font-size="9.5" text-anchor="middle" fill="#666">окрема JVM</text>
+<rect x="744" y="300" width="196" height="150" rx="7" fill="#eaf5ea" stroke="#2e7d32" stroke-width="1.8"/>
+<text x="842" y="326" font-size="15.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">daemon-4</text>
+<text x="842" y="346" font-size="12.5" text-anchor="middle" fill="#1a1a1a">Daemon, порт 2222</text>
+<text x="842" y="364" font-size="12" text-anchor="middle" fill="#555">e2-standard-2</text>
+<rect x="758" y="378" width="84" height="56" rx="5" fill="#ffffff" stroke="#2e7d32" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="800" y="398" font-size="12" text-anchor="middle" fill="#1a1a1a" font-weight="bold">point</text>
+<text x="800" y="414" font-size="10.5" text-anchor="middle" fill="#1a1a1a">TrialDivision</text>
+<text x="800" y="428" font-size="9.5" text-anchor="middle" fill="#666">окрема JVM</text>
+<rect x="850" y="378" width="84" height="56" rx="5" fill="#ffffff" stroke="#2e7d32" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="892" y="398" font-size="12" text-anchor="middle" fill="#1a1a1a" font-weight="bold">point</text>
+<text x="892" y="414" font-size="10.5" text-anchor="middle" fill="#1a1a1a">TrialDivision</text>
+<text x="892" y="428" font-size="9.5" text-anchor="middle" fill="#666">окрема JVM</text>
+<path d="M 207.92,196 L 158,292" stroke="#616161" stroke-width="2" fill="none" stroke-dasharray="6 4" marker-end="url(#a-616161)"/>
+<path d="M 217.04,196 L 386,292" stroke="#616161" stroke-width="2" fill="none" stroke-dasharray="6 4" marker-end="url(#a-616161)"/>
+<path d="M 226.16,196 L 614,292" stroke="#616161" stroke-width="2" fill="none" stroke-dasharray="6 4" marker-end="url(#a-616161)"/>
+<path d="M 235.28,196 L 842,292" stroke="#616161" stroke-width="2" fill="none" stroke-dasharray="6 4" marker-end="url(#a-616161)"/>
+<text x="940" y="238" font-size="13" text-anchor="end" fill="#444">3. запуск точки та канал до неї</text>
+<rect x="60" y="478" width="860" height="100" rx="7" fill="#fafafa" stroke="#bdbdbd" stroke-width="1.8"/>
+<text x="80" y="504" font-size="14" text-anchor="start" fill="#1a1a1a" font-weight="bold">Що йде каналом:</text>
+<text x="80" y="528" font-size="13.5" text-anchor="start" fill="#1a1a1a">у воркера  →  три числа: N, початок і кінець його відрізка  (24 байти)</text>
+<text x="80" y="550" font-size="13.5" text-anchor="start" fill="#1a1a1a">від воркера  ←  список знайдених дільників, зазвичай порожній або з одного  (8 байт)</text>
+<text x="80" y="570" font-size="12.5" text-anchor="start" fill="#555">а всередині — понад півмільярда операцій остачі: саме тому мережа не стає вузьким місцем</text>
+</svg>
